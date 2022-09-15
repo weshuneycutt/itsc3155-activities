@@ -1,0 +1,1 @@
+This repository included activities for ITSC3155 - Software Engineering. 
