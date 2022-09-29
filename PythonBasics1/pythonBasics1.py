@@ -7,14 +7,17 @@
 # Part A. odd_range
 # Define a function odd_range(num1, num2) that takes a starting number (num1) and an ending number (num2)
 # and returns all odd numbers as an array between num1 (inclusive) and num2 (exclusive)
+from pickle import FALSE, TRUE
+
+
 def odd_range(num1, num2):
   odd_numa = []
-  for i in range [num1, num2]:
+  for i in range (num1, num2):
     if i % 2 ==1: 
       odd_numa.append(i)
 
 
-  return
+  return odd_numa
 
 # Part B. has_lower_case
 # Define a function has_lower_case(s) that takes a string s
@@ -23,8 +26,11 @@ def odd_range(num1, num2):
 # otherwise return False
 def has_lower_case(s):
   # YOUR CODE HERE
-  
-  return
+
+  for x in range (0, len(s)):
+    if ord(s[x]) >= 97 and ord(s[x])<= 122:
+      return True
+  return False
 
 # Part C. fizz_buzz
 # Define a function fizz_buzz(num) that takes an integer num
