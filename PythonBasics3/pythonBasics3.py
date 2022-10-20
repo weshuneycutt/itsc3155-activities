@@ -14,7 +14,7 @@ import re
 # Note: Be sure to use RegEx!
 def starts_with_non_number(s):
   # YOUR CODE HERE
-
+  
   return
 
 # # Part B. multiple_words
