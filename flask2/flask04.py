@@ -35,7 +35,7 @@ def get_notes():
     a_user = db.session.query(User).filter_by(email='whuney@uncc.edu')
     my_notes = db.session.query(Note).all()
     
-    return render_template('notes.html', notes=notes, user=a_user)
+    return render_template('notes.html', notes=my_notes, user=a_user)
 @app.route('/notes/<note_id>')
 def get_note(note_id):
     a_user = db.session.query(User).filter_by(email= 'whuney@uncc.edu')
@@ -45,7 +45,7 @@ def get_note(note_id):
           #  3: {'title' : 'Third note', 'text': 'This is my third note', 'date': '10-8-2020'} 
            #     }
    # a_user = {'name': 'Wes', 'email':'whuney@uncc.edu'}
-    return render_template('note.html', note=notes[int(note_id)])
+    return render_template('note.html', note=my_note, user=a_user)
 @app.route('/notes/new', methods = ['GET', 'POST'])
 def new_note():
 #MOCK USER
