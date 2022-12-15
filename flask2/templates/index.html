@@ -24,6 +24,11 @@
         <h3>To Do</h3>
 
         <h3>Work notes</h3>
-
-    </body>
+ </body>
+% if user %
+<nav> <a href = "{{url_for('logout')}}">Logout</a></nav>
+% else %
+<nav><a href = "{{url_for('login')}}">Sign In</nav>
+   <nav> <a href = "{{url_for('register')}}">Register</nav>
+   
 </html>
