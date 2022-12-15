@@ -34,14 +34,18 @@ with app.app_context():
 # get called. What it returns is what is shown as the web page
 @app.route('/index')
 def index():
-    a_user = db.session.query(User).filter_by(email='whuney@uncc.edu').one()
-    return render_template("index.html", user = a_user)
+    if session.get('user'):
+        return render_template("index.html", user = session['user'])
+    return render_template("index.html")
 @app.route('/notes')
 def get_notes():
-    a_user = db.session.query(User).filter_by(email='whuney@uncc.edu').one()
-    my_notes = db.session.query(Note).all()
+    if session.get('user'):
+    #a_user = db.session.query(User).filter_by(email='whuney@uncc.edu').one()
+     my_notes = db.session.query(Note).all()
     
-    return render_template('notes.html', notes=my_notes, user=a_user)
+     return render_template('notes.html', notes=my_notes, user = session['user']
+    else:
+        return redirect(url_for('login'))
 @app.route('/notes/<note_id>')
 def get_note(note_id):
    # a_user = db.session.query(User).filter_by(email= 'whuney@uncc.edu')
@@ -59,6 +63,7 @@ def new_note():
 #MOCK USER
    # a_user = {'name': 'Wes', 'email':'whuney@uncc.edu'}
  #check  method
+ if session.get('user'):
     if request.method == 'POST':
      title = request.form['title']
      #get note data
@@ -69,47 +74,56 @@ def new_note():
      #format mm/dd/yyyy
      today = today.strftime("%m-%d-%Y")
      #get last id used and increment by 1
-     new_record = Note(title, text, today)
+     new_record = Note(title, text, today, session['user_id'])
      db.session.add(new_record)
      db.session.commit()
 
      return redirect(url_for('get_notes'))
 
     else:
-        a_user = db.session.query(User).filter_by(email='whuney@uncc.edu').one()
+        #a_user = db.session.query(User).filter_by(email='whuney@uncc.edu').one()
         #a_user = db.session.query(User).filter_by(email='whuney@uncc.edu')
-        return render_template('new.html', user=a_user)
+        return render_template('new.html', user=session['user'])
+else:
+    return redirect(url_for('login'))
 @app.route('/notes/edit/<note_id>', method=['GET', 'POST'])
 def update_note(note_id):
-    if request.method == 'POST':
-        title = request.form['title']
-        text = request.form['noteText']
-        note = db.session.query(Note).filter_by(id=note_id).one()
+   if session.get('user'):
+          if request.method == 'POST':
+          title = request.form['title']
+          text = request.form['noteText']
+           note = db.session.query(Note).filter_by(id=note_id).one()
 
-        note.title=title
-        note.text=text
+          note.title=title
+          note.text=text
 
-        db.session.add(note)
-        db.session.commit()
+          db.session.add(note)
+         db.session.commit()
 
-        return redirect(url_for('get_notes'))
-    else:
+         return redirect(url_for('get_notes'))
+         else:
 
     #GET request - show new note form edit note
     #retrive user from database
-        a_user = db.session.query(User).filter_by(email='whuney@uncc.edu').one()
+         a_user = db.session.query(User).filter_by(email='whuney@uncc.edu').one()
 
-        my_note = db.session.query(Note).filter_by(id=note_id).one()
+            my_note = db.session.query(Note).filter_by(id=note_id).one()
 
-        return render_template('new.html', note=my_note, user=a_user)
+    
+            return render_template('new.html', note=my_note, user=a_user)
+    else: 
+        return redirect(url_for('login'))  
+
 @app.route('/notes/delete/<note_id>', method=['POST'])
 def delete_note(note_id):
-    my_note = db.session.query(Note).filter_by(id=note_id).one()
-    db.session.delete(my_note)
-    db.session.commit()
+    if session.get('user'):
+        my_note = db.session.query(Note).filter_by(id=note_id).one()
+        db.session.delete(my_note)
+        db.session.commit()
 
-    return redirect(url_for('get_notes'))
-    
+        return redirect(url_for('get_notes'))
+    else: 
+        return redirect(url_for('login'))
 @app.route('/register', methods=['POST', 'GET'])
 def register():
     form = RegisterForm()
